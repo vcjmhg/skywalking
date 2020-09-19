@@ -193,6 +193,63 @@ segmentItems:
         parentSpanId: 8, parentTraceSegmentId: not null, parentServiceInstance: not
           null, parentService: not null, traceId: not null}
       skipAnalysis: 'false'
+  - segmentId: not null
+    spans:
+    - operationName: /testcase/webclient/testGet
+      operationId: 0
+      parentSpanId: -1
+      spanId: 0
+      spanLayer: Http
+      startTime: not null
+      endTime: not null
+      componentId: 67
+      isError: false
+      spanType: Entry
+      peer: ''
+      skipAnalysis: false
+      tags:
+      - {key: url, value: 'http://localhost:18080/testcase/webclient/testGet'}
+      - {key: http.method, value: GET}
+      - {key: status_code, value: '200'}
+      refs:
+      - {parentEndpoint: /projectA/testcase, networkAddress: 'localhost:18080', refType: CrossProcess,
+        parentSpanId: 9, parentTraceSegmentId: not null, parentServiceInstance: not null, parentService: not null, traceId: not null}
+  - segmentId: not null
+    spans:
+    - operationName: /testcase/webclient/server
+      operationId: 0
+      parentSpanId: -1
+      spanId: 0
+      spanLayer: Http
+      startTime: not null
+      endTime: not null
+      componentId: 67
+      isError: false
+      spanType: Entry
+      peer: ''
+      skipAnalysis: false
+      tags:
+      - {key: url, value: 'http://localhost:18080/testcase/webclient/server'}
+      - {key: http.method, value: GET}
+      - {key: status_code, value: '200'}
+  - segmentId: not null
+    spans:
+    - operationName: /testcase/webclient/server
+      operationId: 0
+      parentSpanId: -1
+      spanId: 0
+      spanLayer: Http
+      startTime: not null
+      endTime: not null
+      componentId: 98
+      isError: false
+      spanType: Exit
+      peer: not null
+      skipAnalysis: false
+      tags:
+      - {key: url, value: 'http://localhost:18080/testcase/webclient/server'}
+      - {key: http.method, value: GET}
+      - {key: status_code, value: '200'}
 - serviceName: webflux-projectA-scenario
   segmentSize: nq 0
   segments:
@@ -332,7 +389,7 @@ segmentItems:
       isError: false
       spanType: Exit
       peer: not null
-      skipAnalysis: 'false'
+      skipAnalysis: false
       tags:
       - {key: url, value: not null}
       - {key: http.method, value: GET}
@@ -351,63 +408,3 @@ segmentItems:
       - {key: url, value: not null}
       - {key: http.method, value: GET}
       skipAnalysis: 'false'
-- serviceName: webflux-webclient-scenario
-  segmentSize: nq 0
-  segments:
-  - segmentId: not null
-    spans:
-    - operationName: /testcase/webclient/testGet
-      operationId: 0
-      parentSpanId: -1
-      spanId: 0
-      spanLayer: Http
-      startTime: not null
-      endTime: not null
-      componentId: 67
-      isError: false
-      spanType: Entry
-      peer: ''
-      skipAnalysis: 'false'
-      tags:
-      - {key: url, value: 'http://localhost:18081/testcase/webclient/testGet'}
-      - {key: http.method, value: GET}
-      - {key: status_code, value: '200'}
-      refs:
-      - {parentEndpoint: /projectA/testcase, networkAddress: 'localhost:18081', refType: CrossProcess,
-        parentSpanId: 9, parentTraceSegmentId: not null, parentServiceInstance: not null, parentService: not null, traceId: not null}
-  - segmentId: not null
-    spans:
-    - operationName: /testcase/webclient/server
-      operationId: 0
-      parentSpanId: -1
-      spanId: 0
-      spanLayer: Http
-      startTime: not null
-      endTime: not null
-      componentId: 67
-      isError: false
-      spanType: Entry
-      peer: ''
-      skipAnalysis: 'false'
-      tags:
-      - {key: url, value: 'http://localhost:18081/testcase/webclient/server'}
-      - {key: http.method, value: GET}
-      - {key: status_code, value: '200'}
-  - segmentId: not null
-    spans:
-    - operationName: /testcase/webclient/server
-      operationId: 0
-      parentSpanId: -1
-      spanId: 0
-      spanLayer: Http
-      startTime: not null
-      endTime: not null
-      componentId: 98
-      isError: false
-      spanType: Exit
-      peer: not null
-      skipAnalysis: 'false'
-      tags:
-      - {key: url, value: 'http://localhost:18081/testcase/webclient/server'}
-      - {key: http.method, value: GET}
-      - {key: status_code, value: '200'}

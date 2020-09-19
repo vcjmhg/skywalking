@@ -17,21 +17,19 @@
 
 package org.apache.skywalking.apm.testcase.sc.webflux.projectA.controller;
 
-import java.io.IOException;
 import org.apache.skywalking.apm.testcase.sc.webflux.projectA.utils.HttpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+
 @RestController
 public class TestController {
 
     @Value("${projectB.host:localhost:18080}")
     private String hostBAddress;
-    @Value("${webclient.host:localhost:18081}")
-    private String clientHostAddress;
-
     @Autowired
     private HttpUtils httpUtils;
 
@@ -45,7 +43,7 @@ public class TestController {
         visit("http://" + hostBAddress + "/testcase/route/error");
         visit("http://" + hostBAddress + "/notFound");
         visit("http://" + hostBAddress + "/testcase/annotation/mono/hello");
-        visit("http://" + clientHostAddress + "/testcase/webclient/testGet");
+        visit("http://" + hostBAddress + "/testcase/webclient/testGet");
         return "test";
     }
 

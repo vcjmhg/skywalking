@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package org.apache.skywalking.apm.testcase.webflux.webclient.controller;
+package test.apache.skywalking.apm.testcase.sc.webflux.projectB.controller;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +24,7 @@ import reactor.core.publisher.Mono;
 
 @RestController
 public class TestWebfluxWebClientController {
-    @Value("${webclient.host:localhost:18081}")
+    @Value("${webclient.host:localhost:18080}")
     private String clientHostAddress;
 
     @RequestMapping("/testcase/webclient/server")

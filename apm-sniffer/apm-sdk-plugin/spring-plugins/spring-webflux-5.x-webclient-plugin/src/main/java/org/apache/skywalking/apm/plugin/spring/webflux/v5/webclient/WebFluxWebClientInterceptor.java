@@ -61,7 +61,7 @@ public class WebFluxWebClientInterceptor implements InstanceMethodsAroundInterce
         Tags.HTTP.METHOD.set(span, request.method().toString());
         SpanLayer.asHttp(span);
 
-        //user async interface
+        //use async interface
         span.prepareForAsync();
         ContextManager.stopSpan();
 
