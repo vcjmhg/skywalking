@@ -48,7 +48,6 @@
         <snakeyaml.version>1.24</snakeyaml.version>
 
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
-        <maven-checkstyle-plugin.version>3.1.0</maven-checkstyle-plugin.version>
         <checkstyle.fails.on.error>true</checkstyle.fails.on.error>
     </properties>
 
@@ -92,6 +91,22 @@
     </dependencies>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>3.1.1</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>com.puppycrawl.tools</groupId>
+                            <artifactId>checkstyle</artifactId>
+                            <version>8.38</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -105,7 +120,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-checkstyle-plugin</artifactId>
-                <version>${maven-checkstyle-plugin.version}</version>
+                <version>3.1.1</version>
                 <configuration>
                     <configLocation>${maven.multiModuleProjectDirectory}/apm-checkstyle/checkStyle.xml</configLocation>
                     <headerLocation>${maven.multiModuleProjectDirectory}/apm-checkstyle/CHECKSTYLE_HEAD</headerLocation>
@@ -126,7 +141,10 @@
                         **/*.xml
                     </resourceIncludes>
                     <excludes>
-                        **/target/generated-test-sources/**
+                        **/target/generated-test-sources/**,
+                        **/target/generated-sources/**,
+                        **/org/apache/skywalking/apm/testcase/baidu.brpc/interfaces/Echo.java,
+                        **/org/apache/skywalking/apm/testcase/grpc/proto/*.java
                     </excludes>
                     <propertyExpansion>
                         import.control=${maven.multiModuleProjectDirectory}/apm-checkstyle/importControl.xml
