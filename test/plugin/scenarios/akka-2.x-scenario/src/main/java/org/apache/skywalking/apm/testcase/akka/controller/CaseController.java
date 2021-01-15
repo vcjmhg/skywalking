@@ -45,12 +45,19 @@ public class CaseController {
 
     @Autowired
     private ActorSystem system;
+    ActorRef noSenderActor, hasSenderActor, startActor;
 
     private void testActor() {
         log.info("start create actor");
-        final ActorRef noSenderActor = system.actorOf(NoSenderActor.props(), "noSenderActor");
-        final ActorRef hasSenderActor = system.actorOf(HasSenderActor.props(), "hasSenderActor");
-        final ActorRef startActor = system.actorOf(StartActor.props(), "FirstStartActor");
+        if (noSenderActor == null) {
+            noSenderActor = system.actorOf(NoSenderActor.props(), "noSenderActor-test");
+        }
+        if (hasSenderActor == null) {
+            hasSenderActor = system.actorOf(HasSenderActor.props(), "hasSenderActor");
+        }
+        if (startActor == null) {
+            startActor = system.actorOf(StartActor.props(), "FirstStartActor");
+        }
         log.info("start tell message!");
         noSenderActor.tell("start", startActor);
         hasSenderActor.tell("start", startActor);

@@ -38,19 +38,19 @@ import java.lang.reflect.Method;
 public class ActorCellInterceptor implements InstanceMethodsAroundInterceptor {
     @Override
     public void beforeMethod(EnhancedInstance objInst, Method method, Object[] allArguments, Class<?>[] argumentsTypes, MethodInterceptResult result) throws Throwable {
-        if (allArguments[0] == null) {
+        if (allArguments[0] == null || !(allArguments[0] instanceof Envelope)) {
             //illegal args,can't trace ignore
             return;
         }
-        Envelope messageHandler = (Envelope) allArguments[0];
-        if (!(messageHandler.message() instanceof MessageHelper)) {
+        Envelope envelope = (Envelope) allArguments[0];
+        if (!(envelope.message() instanceof MessageHelper)) {
             return;
         }
         final ILog log = LogManager.getLogger(ActorCellInterceptor.class);
-        MessageHelper messageHelper = (MessageHelper) messageHandler.message();
+        MessageHelper messageHelper = (MessageHelper) envelope.message();
         // reset message
-        allArguments[0] = messageHelper.getMessage();
-        ActorRef sender = messageHandler.sender();
+        ActorRef sender = envelope.sender();
+        allArguments[0] = new Envelope(messageHelper.getMessage(), sender);
         log.info("Receive message===>" + allArguments[0].toString() + " from===> " + sender.toString());
         ContextCarrier contextCarrier = new ContextCarrier();
         CarrierItem next = contextCarrier.items();
