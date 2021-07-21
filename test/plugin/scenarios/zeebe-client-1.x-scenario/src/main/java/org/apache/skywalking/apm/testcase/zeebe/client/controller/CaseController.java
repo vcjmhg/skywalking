@@ -44,24 +44,26 @@ public class CaseController {
     private final String bpmnProcessId = "demoProcess";
 
     // Deploy workflow
-    @PostConstruct
-    public void setUp() {
-        final ZeebeClientBuilder clientBuilder =
-            ZeebeClient.newClientBuilder().gatewayAddress(broker).usePlaintext();
+//    @PostConstruct
+//    public void setUp() {
+//        final ZeebeClientBuilder clientBuilder =
+//            ZeebeClient.newClientBuilder().gatewayAddress(broker).usePlaintext();
+//
+//        try (final ZeebeClient client = clientBuilder.build()) {
+//
+//            final DeploymentEvent deploymentEvent =
+//                client.newDeployCommand().addResourceFromClasspath(bpmnProcessId).send().join();
+//
+//            log.info("Deployment created with key: " + deploymentEvent.getKey());
+//        }
+//    }
 
-        try (final ZeebeClient client = clientBuilder.build()) {
-
-            final DeploymentEvent deploymentEvent =
-                client.newDeployCommand().addResourceFromClasspath(bpmnProcessId).send().join();
-
-            log.info("Deployment created with key: " + deploymentEvent.getKey());
-        }
-    }
-
-    @RequestMapping("/zeebe-client-1.x-scenario")
+    @RequestMapping("/testcase")
     @ResponseBody
     public String testcase() {
-        // your codes
+        //create workflow instance
+        startJobWorker();
+        createWorkflowInstance();
         return SUCCESS;
     }
 
@@ -84,7 +86,7 @@ public class CaseController {
         return new WorkflowInstanceCreator().createWorkflowInstance(broker, bpmnProcessId).toString();
     }
 
-    @RequestMapping("/hello")
+    @RequestMapping("/mock_rpc")
     public String hello() {
         return "hello";
     }

@@ -30,7 +30,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <compiler.version>1.8</compiler.version>
-        <test.framework.version>YOUR VERSION</test.framework.version>
+        <test.framework.version>0.26.4-SNAPSHOT</test.framework.version>
         <spring-boot-version>2.1.6.RELEASE</spring-boot-version>
         <lombok.version>1.18.20</lombok.version>
     </properties>
@@ -45,11 +45,6 @@
                 <version>${spring-boot-version}</version>
                 <type>pom</type>
                 <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>io.zeebe</groupId>
-                <artifactId>zeebe-client-java</artifactId>
-                <version>0.26.3</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -78,11 +73,7 @@
         <dependency>
             <groupId>io.zeebe</groupId>
             <artifactId>zeebe-client-java</artifactId>
-            <version>0.26.4-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>net.bytebuddy</groupId>
-            <artifactId>byte-buddy</artifactId>
+            <version>${test.framework.version}</version>
         </dependency>
     </dependencies>
 

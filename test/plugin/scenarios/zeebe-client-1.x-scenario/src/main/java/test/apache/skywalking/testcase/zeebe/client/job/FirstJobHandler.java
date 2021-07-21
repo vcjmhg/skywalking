@@ -3,39 +3,29 @@ package test.apache.skywalking.testcase.zeebe.client.job;
 import io.zeebe.client.api.response.ActivatedJob;
 import io.zeebe.client.api.worker.JobClient;
 import io.zeebe.client.api.worker.JobHandler;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+@Slf4j
 public class FirstJobHandler implements JobHandler {
 
     @Override
     public void handle(final JobClient client, final ActivatedJob job) {
         //mock rpc
         mockCrossThreadRPC(client, job);
-//        mockCrossProgremRPC();
+        //get process variable
+        log.info(job.getVariablesAsMap().get("key1").toString());
     }
 
     private void mockCrossThreadRPC(final JobClient client, final ActivatedJob job) {
+        final String rpcUrl = "http://localhost:8080/mock_rpc";
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> result = restTemplate.getForEntity(
-            "http://localhost:8080/zeebe-client-1.x-scenario/hello", String.class);
+        ResponseEntity<String> result = restTemplate.getForEntity(rpcUrl, String.class);
 
-        System.out.println(result.getBody());
-        System.out.println(job);
+        log.info(result.getBody());
+        log.info(job.toString());
         client.newCompleteCommand(job.getKey()).send().join();
         JobWorkerCreator.setStop(true);
-    }
-
-    public void mockCrossProgremRPC() {
-        RestTemplate restTemplate = new RestTemplate();
-        String url = "http://test.api.s.woa.com/public-service-id-generator/generateId";
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<String> request = new HttpEntity<>("{\"key\":\"zeebe-plugin-scenario\"}", headers);
-        ResponseEntity<String> result = restTemplate.postForEntity(url, request, String.class);
-        System.out.println(result);
     }
 }
