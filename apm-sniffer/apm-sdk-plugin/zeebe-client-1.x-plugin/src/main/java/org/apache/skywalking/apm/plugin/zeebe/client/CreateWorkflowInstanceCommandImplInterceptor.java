@@ -23,6 +23,7 @@ import io.zeebe.client.impl.ZeebeObjectMapper;
 import io.zeebe.gateway.protocol.GatewayOuterClass;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.Map;
 import org.apache.skywalking.apm.agent.core.context.ContextCarrier;
 import org.apache.skywalking.apm.agent.core.context.ContextManager;
 import org.apache.skywalking.apm.agent.core.context.trace.AbstractSpan;
@@ -34,61 +35,48 @@ import org.apache.skywalking.apm.agent.core.plugin.interceptor.enhance.MethodInt
 /**
  * get an instance of ContextCarrier and add it to the request header for cross-thread
  */
-public class ActivateJobsCommandImplInterceptor implements InstanceMethodsAroundInterceptor {
+public class CreateWorkflowInstanceCommandImplInterceptor implements InstanceMethodsAroundInterceptor {
 
     @Override
     public void beforeMethod(final EnhancedInstance objInst,
-                             final Method method,
-                             final Object[] allArguments,
-                             final Class<?>[] argumentsTypes,
-                             final MethodInterceptResult result) throws Throwable {
+            final Method method,
+            final Object[] allArguments,
+            final Class<?>[] argumentsTypes,
+            final MethodInterceptResult result) throws Throwable {
         //set request header
-        GatewayOuterClass.CreateWorkflowInstanceRequest request = (GatewayOuterClass.CreateWorkflowInstanceRequest) allArguments[0];
+        GatewayOuterClass.CreateWorkflowInstanceRequest request =
+                (GatewayOuterClass.CreateWorkflowInstanceRequest) allArguments[0];
         if (request == null) {
             return;
         }
         ContextCarrier carrier = new ContextCarrier();
         //creat LocalSpan
-        AbstractSpan span = ContextManager.createExitSpan(request.getBpmnProcessId(), carrier, "/zeebe/no/peer");
+        AbstractSpan span = ContextManager.createExitSpan(request.getBpmnProcessId(), carrier, "/createInstance");
         //        span.setComponent(ComponentsDefine.ZEEBE_CLIENT);
         SpanLayer.asRPCFramework(span);
         span.setOperationName("Zeebe/" + request.getBpmnProcessId());
         span.start();
         ContextManager.stopSpan();
         ContextManager.inject(carrier);
-        //serialize ContextCarrier
-        final String variablesString = new ZeebeObjectMapper()
-            .toJson(
-                new HashMap<String, ContextCarrier>() {{
-                    put("__skywaling_zeebe_header__", carrier);
-                }});
         //change request header
+        final ZeebeObjectMapper mapper = new ZeebeObjectMapper();
         final String originVariables = request.getVariables();
-        String combinedVariables = combinVariables(variablesString, originVariables);
-        allArguments[0] = request.toBuilder().setVariables(combinedVariables).build();
-    }
-
-    private String combinVariables(final String carrierString, final String originVariables) {
-        StringBuilder sb = new StringBuilder();
-        // in case originVariables is null
-        if ("".equals(originVariables)) {
-            sb.append(carrierString);
-        } else if ("".equals(carrierString)) {
-            sb.append(originVariables);
-        } else {
-            sb.append(originVariables, 0, originVariables.length() - 1)
-              .append(",")
-              .append(carrierString.substring(1));
+        Map<String, Object> variablesMap = new HashMap<>();
+        if (!originVariables.isEmpty()) {
+            variablesMap = mapper.fromJsonAsMap(originVariables);
         }
-        return sb.toString();
+
+        variablesMap.put(CommonKeys.SW_ZEEBE_KEY, carrier);
+        String combinedVariables = mapper.toJson(variablesMap);
+        allArguments[0] = request.toBuilder().setVariables(combinedVariables).build();
     }
 
     @Override
     public Object afterMethod(final EnhancedInstance objInst,
-                              final Method method,
-                              final Object[] allArguments,
-                              final Class<?>[] argumentsTypes,
-                              final Object ret) throws Throwable {
+            final Method method,
+            final Object[] allArguments,
+            final Class<?>[] argumentsTypes,
+            final Object ret) throws Throwable {
         //if first argument is null, can't resolve
         if (allArguments[0] == null) {
             return ret;
@@ -101,10 +89,10 @@ public class ActivateJobsCommandImplInterceptor implements InstanceMethodsAround
 
     @Override
     public void handleMethodException(final EnhancedInstance objInst,
-                                      final Method method,
-                                      final Object[] allArguments,
-                                      final Class<?>[] argumentsTypes,
-                                      final Throwable t) {
+            final Method method,
+            final Object[] allArguments,
+            final Class<?>[] argumentsTypes,
+            final Throwable t) {
         if (ContextManager.isActive()) {
             AbstractSpan span = ContextManager.activeSpan();
             span.log(t);

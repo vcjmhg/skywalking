@@ -30,7 +30,9 @@ import static net.bytebuddy.matcher.ElementMatchers.named;
 import static net.bytebuddy.matcher.ElementMatchers.takesArguments;
 
 public class JobHandlerInstrumentation extends ClassInstanceMethodsEnhancePluginDefine {
-    public static final String INTERCEPTOR_CLASS = "org.apache.skywalking.apm.plugin.zeebe.client.JobHandlerInterceptor";
+
+    public static final String INTERCEPTOR_CLASS =
+            "org.apache.skywalking.apm.plugin.zeebe.client.JobHandlerInterceptor";
     public static final String ENHANCE_CLASS = "io.zeebe.client.api.worker.JobHandler";
     public static final String ENHANCE_METHOD = "handle";
 
@@ -41,23 +43,23 @@ public class JobHandlerInstrumentation extends ClassInstanceMethodsEnhancePlugin
 
     @Override
     public InstanceMethodsInterceptPoint[] getInstanceMethodsInterceptPoints() {
-        return new InstanceMethodsInterceptPoint[] {
-            new InstanceMethodsInterceptPoint() {
-                @Override
-                public ElementMatcher<MethodDescription> getMethodsMatcher() {
-                    return named(ENHANCE_METHOD).and(takesArguments(2));
-                }
+        return new InstanceMethodsInterceptPoint[]{
+                new InstanceMethodsInterceptPoint() {
+                    @Override
+                    public ElementMatcher<MethodDescription> getMethodsMatcher() {
+                        return named(ENHANCE_METHOD).and(takesArguments(2));
+                    }
 
-                @Override
-                public String getMethodsInterceptor() {
-                    return INTERCEPTOR_CLASS;
-                }
+                    @Override
+                    public String getMethodsInterceptor() {
+                        return INTERCEPTOR_CLASS;
+                    }
 
-                @Override
-                public boolean isOverrideArgs() {
-                    return true;
+                    @Override
+                    public boolean isOverrideArgs() {
+                        return true;
+                    }
                 }
-            }
         };
     }
 

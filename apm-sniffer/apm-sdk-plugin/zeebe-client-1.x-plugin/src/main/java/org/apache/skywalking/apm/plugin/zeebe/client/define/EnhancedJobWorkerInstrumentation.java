@@ -18,9 +18,6 @@
 
 package org.apache.skywalking.apm.plugin.zeebe.client.define;
 
-import static net.bytebuddy.matcher.ElementMatchers.isAnnotatedWith;
-import static net.bytebuddy.matcher.ElementMatchers.named;
-
 import net.bytebuddy.description.method.MethodDescription;
 import net.bytebuddy.matcher.ElementMatcher;
 import org.apache.skywalking.apm.agent.core.plugin.interceptor.ConstructorInterceptPoint;
@@ -30,12 +27,18 @@ import org.apache.skywalking.apm.agent.core.plugin.interceptor.enhance.ClassInst
 import org.apache.skywalking.apm.agent.core.plugin.match.ClassMatch;
 import org.apache.skywalking.apm.agent.core.plugin.match.MethodAnnotationMatch;
 
+import static net.bytebuddy.matcher.ElementMatchers.isAnnotatedWith;
+import static net.bytebuddy.matcher.ElementMatchers.named;
+
 public class EnhancedJobWorkerInstrumentation extends ClassInstanceMethodsEnhancePluginDefine {
 
-    private static final String TRACE_ANNOTATION_METHOD_INTERCEPTOR = "org.apache.skywalking.apm.plugin.zeebe.client.JobHandlerInterceptor";
-    private static final String TRACE_ANNOTATION = "com.tencent.ssmd.boot.workflowclient.annotation.EnhancedJobWorker";
-//    private static final String METHOD = "handleTask";
-//    private static final String WITNESS_CLASS = "com.tencent.ssmd.boot.workflowclient.beanprocessor.EnhancedJobWorkerProcessor";
+    private static final String TRACE_ANNOTATION_METHOD_INTERCEPTOR =
+            "org.apache.skywalking.apm.plugin.zeebe.client.JobHandlerInterceptor";
+    private static final String TRACE_ANNOTATION =
+            "com.tencent.ssmd.boot.workflowclient.annotation.EnhancedJobWorker";
+
+    private static final String WITNESS_CLASS =
+            "com.tencent.ssmd.boot.workflowclient.beanprocessor.EnhancedJobWorkerProcessor";
 
     @Override
     public ConstructorInterceptPoint[] getConstructorsInterceptPoints() {
@@ -70,8 +73,8 @@ public class EnhancedJobWorkerInstrumentation extends ClassInstanceMethodsEnhanc
     }
 
     // only when EnhancedJobWorkerProcessor exsit, active this Instrumentation
-//    @Override
-//    protected String[] witnessClasses() {
-//        return new String[] {WITNESS_CLASS};
-//    }
+    @Override
+    protected String[] witnessClasses() {
+        return new String[]{WITNESS_CLASS};
+    }
 }

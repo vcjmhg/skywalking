@@ -14,6 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-zeebe-client-0.26.x=org.apache.skywalking.apm.plugin.zeebe.client.define.ActivateJobsCommandImplInstrumentation
+zeebe-client-0.26.x=org.apache.skywalking.apm.plugin.zeebe.client.define.CreateWorkflowInstanceCommandImplInstrumentation
 zeebe-client-0.26.x=org.apache.skywalking.apm.plugin.zeebe.client.define.JobHandlerInstrumentation
 zeebe-client-0.26.x=org.apache.skywalking.apm.plugin.zeebe.client.define.EnhancedJobWorkerInstrumentation

@@ -29,8 +29,10 @@ import static net.bytebuddy.matcher.ElementMatchers.named;
 import static net.bytebuddy.matcher.ElementMatchers.takesArguments;
 import static org.apache.skywalking.apm.agent.core.plugin.match.NameMatch.byName;
 
-public class ActivateJobsCommandImplInstrumentation extends ClassInstanceMethodsEnhancePluginDefine {
-    public static final String INTERCEPTOR_CLASS = "org.apache.skywalking.apm.plugin.zeebe.client.ActivateJobsCommandImplInterceptor";
+public class CreateWorkflowInstanceCommandImplInstrumentation extends ClassInstanceMethodsEnhancePluginDefine {
+
+    public static final String INTERCEPTOR_CLASS =
+            "org.apache.skywalking.apm.plugin.zeebe.client.CreateWorkflowInstanceCommandImplInterceptor";
     public static final String ENHANCE_CLASS = "io.zeebe.client.impl.command.CreateWorkflowInstanceCommandImpl";
     public static final String ENHANCE_METHOD = "send";
 
@@ -41,23 +43,23 @@ public class ActivateJobsCommandImplInstrumentation extends ClassInstanceMethods
 
     @Override
     public InstanceMethodsInterceptPoint[] getInstanceMethodsInterceptPoints() {
-        return new InstanceMethodsInterceptPoint[] {
-            new InstanceMethodsInterceptPoint() {
-                @Override
-                public ElementMatcher<MethodDescription> getMethodsMatcher() {
-                    return named(ENHANCE_METHOD).and(takesArguments(2));
-                }
+        return new InstanceMethodsInterceptPoint[]{
+                new InstanceMethodsInterceptPoint() {
+                    @Override
+                    public ElementMatcher<MethodDescription> getMethodsMatcher() {
+                        return named(ENHANCE_METHOD).and(takesArguments(2));
+                    }
 
-                @Override
-                public String getMethodsInterceptor() {
-                    return INTERCEPTOR_CLASS;
-                }
+                    @Override
+                    public String getMethodsInterceptor() {
+                        return INTERCEPTOR_CLASS;
+                    }
 
-                @Override
-                public boolean isOverrideArgs() {
-                    return true;
+                    @Override
+                    public boolean isOverrideArgs() {
+                        return true;
+                    }
                 }
-            }
         };
     }
 

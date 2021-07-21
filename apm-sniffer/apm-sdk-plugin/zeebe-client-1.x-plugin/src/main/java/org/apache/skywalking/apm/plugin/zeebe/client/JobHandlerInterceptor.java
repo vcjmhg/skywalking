@@ -45,7 +45,7 @@ public class JobHandlerInterceptor implements InstanceMethodsAroundInterceptor {
         ActivatedJob job = (ActivatedJob) allArguments[1];
         final Map<String, Object> variablesAsMap = job.getVariablesAsMap();
         // recover ContextCarrier from request
-        Object obj = variablesAsMap.get("__skywaling_zeebe_header__");
+        Object obj = variablesAsMap.get(CommonKeys.SW_ZEEBE_KEY);
         ContextCarrier contextCarrier = new ZeebeObjectMapper()
                 .convertValue(obj, ContextCarrier.class);
         if (contextCarrier == null) {
